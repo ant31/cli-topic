@@ -1,4 +1,4 @@
-module Topicli
+module Clitopic
   module Command
     class Base
     end

@@ -1,9 +1,14 @@
-module Topicli
+
+module Clitopic
   class TopicAlreadyExists  < ArgumentError; end
 
   class Topics
     class << self
+      require 'clitopic/topic_base'
       def []=(key, val)
+        if not (val < Clitopic::Topic::Base)
+          raise ArgumentError.new("#{val} is not a Topic")
+        end
         topics[key] = val
       end
 

@@ -1,14 +1,18 @@
 require 'set'
-require 'topicli/topics'
+require 'clitopic/topics'
 
-module Topicli
+module Clitopic
   module Topic
     class Base
       class << self
-        attr_accessor :description, :hidden
+        attr_accessor :name, :description, :hidden
 
         def commands
           @commands ||= Set.new
+        end
+
+        def name(arg=nil)
+          @name ||= arg
         end
 
         def description (arg=nil)
@@ -21,12 +25,14 @@ module Topicli
 
         alias :hidden? :hidden
 
-      protected
 
       def register(name: , description:, hidden: false, force: false)
+        @description = description
+        @name = name
+        @hidden = hidden
         topic = self
-        if topics.has_key?(name) && !force
-          raise TopicAlreadyExists.new ("Topic: #{topic.name} already exists: #{topics[name].name}")
+        if !Topics[name].nil? && !force
+          raise TopicAlreadyExists.new ("Topic: #{topic.name} already exists: #{Topics[name].name}")
         else
           Topics[name] = topic
         end

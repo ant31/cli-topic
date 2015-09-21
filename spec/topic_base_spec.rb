@@ -1,0 +1,27 @@
+require 'spec_helper'
+
+describe Clitopic::Topic::Base do
+
+  context 'register' do
+    it 'should add topic to Topics' do
+      expect(Clitopic::Topics['a']) ==  TopicA
+    end
+
+    it 'should failed if the name is already taken' do
+      expect {Topic.register(name: 'a', description: 'a bis')}.to raise_error Clitopic::TopicAlreadyExists
+    end
+
+    it '.name should return name registred' do
+      expect(Clitopic::Topics['a'].name).to eq 'a'
+    end
+
+    it '.description should return description registred' do
+      expect(Clitopic::Topics['a'].description).to eq 'describe a'
+    end
+
+    it '.hidden should return hidden registred' do
+      expect(Clitopic::Topics['a'].hidden).to be false
+    end
+
+  end
+end
