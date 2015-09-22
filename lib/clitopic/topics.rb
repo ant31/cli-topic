@@ -6,7 +6,7 @@ module Clitopic
     class << self
       require 'clitopic/topic_base'
       def []=(key, val)
-        if not (val < Clitopic::Topic::Base)
+        if not (val.is_a?(Clitopic::Topic::Base))
           raise ArgumentError.new("#{val} is not a Topic")
         end
         topics[key] = val

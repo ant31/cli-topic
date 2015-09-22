@@ -2,7 +2,7 @@ module Clitopic
   module Commands
     class CommandFailed  < RuntimeError; end
 
-    module ClassMethod
+    module ClassMethods
       attr_accessor :binary, :current_cmd
 
       def command_aliases
@@ -56,21 +56,24 @@ module Clitopic
         end
       end
 
-      def load(dir)
-        Dir[dir, "*.rb")].each do |file|
-
-        require file
-      end
-    end
-
-    def run
-
+      def get_cmd(cmd)
+        commands[cmd] || commands[command_aliases[cmd]]
       end
 
-    end
+      def run(cmd, arguments=[])
+        klass = prepare_run(cmd, arguments.dup)
+        klass.call(arguments)
+      end
 
+      def prepare_run(cmd, args=[])
+        puts cmd, args
+        command = get_cmd(cmd)
+        puts command
+      end
+    end
     class << self
       include ClassMethods
+#      global_option :help,    "-h", "--help"
     end
   end
 end

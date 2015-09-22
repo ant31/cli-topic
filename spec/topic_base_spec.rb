@@ -4,7 +4,11 @@ describe Clitopic::Topic::Base do
 
   context 'register' do
     it 'should add topic to Topics' do
-      expect(Clitopic::Topics['a']) ==  TopicA
+      expect(Clitopic::Topics['a']).to be_a  TopicA
+    end
+
+    it 'shoud Add instance to class' do
+      expect(Clitopic::Topics['a']).to eq TopicA.instance
     end
 
     it 'should failed if the name is already taken' do

@@ -3,8 +3,9 @@ require 'spec_helper'
 describe Clitopic::Topics do
 
   it "Topics[key] = topic should add the topic" do
-    Clitopic::Topics["c"] = TopicA
-    expect (Clitopic::Topics.topics['c']) == TopicA
+    topic = Clitopic::Topic::Base.new(name: 'new', description: 'desc')
+    Clitopic::Topics["c"] = topic
+    expect (Clitopic::Topics.topics['c']) == topic
   end
 
   it "Topics[key] = val should failed if it's not a Topic" do
@@ -16,6 +17,6 @@ describe Clitopic::Topics do
   end
 
   it "Topics[key] should return the topic" do
-    expect(Clitopic::Topics['a']) ==  TopicA
+    expect(Clitopic::Topics['a']).to be_a  TopicA
   end
 end
