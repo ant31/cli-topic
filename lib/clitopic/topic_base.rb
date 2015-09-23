@@ -8,17 +8,28 @@ module Clitopic
 
       def initialize(opts={}, force=false)
         opts = {hidden: false}.merge(opts)
-        assign(opts)
+        if !opts.has_key?(:name)
+          raise ArgumentError("missing name")
+        end
+        @description = opts[:description]
+        @name = opts[:name]
+        @hidden = opts[:hidden]
+        @short_description = opts[:short_description]
       end
+
       def commands
-        @commands ||= Set.new
+        @commands ||= {}
+      end
+
+      def command_aliases
+        @@command_aliases ||= {}
       end
 
       def name(arg=nil)
         @name ||= arg
       end
 
-      def description (arg=nil)
+      def description(arg=nil)
         @description ||= arg
       end
 
@@ -29,13 +40,6 @@ module Clitopic
       alias :hidden? :hidden
 
       private
-
-      def assign(opts)
-        @description = opts[:description]
-        @name = opts[:name]
-        @hidden = opts[:hidden]
-        @short_description = opts[:short_description]
-      end
 
       class << self
         attr_accessor :instance

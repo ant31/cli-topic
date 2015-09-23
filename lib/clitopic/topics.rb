@@ -16,10 +16,6 @@ module Clitopic
         topics[key]
       end
 
-      def to_s
-        topics.to_s
-      end
-
       def topics
         @@topics ||= {}
       end

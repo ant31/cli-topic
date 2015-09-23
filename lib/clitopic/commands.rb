@@ -3,15 +3,8 @@ module Clitopic
     class CommandFailed  < RuntimeError; end
 
     module ClassMethods
-      attr_accessor :binary, :current_cmd
+      attr_accessor :binary, :current_cmd, :current_topic
 
-      def command_aliases
-        @@command_aliases ||= {}
-      end
-
-      def commands
-        @@commands ||= {}
-      end
 
       def current_args
         @current_args
@@ -25,9 +18,13 @@ module Clitopic
         @global_options ||= []
       end
 
+      def global_commands
+        @global_commands ||= {help: 'help'}
+      end
+
       def global_option(name, *args, &blk)
         # args.sort.reverse gives -l, --long order
-        global_options << { :name => name.to_s, :args => args.sort.reverse, :proc => blk }
+        global_options << { :name => name.to_s, :args => args, :proc => blk }
       end
 
       def invalid_arguments
@@ -52,28 +49,34 @@ module Clitopic
           end
           $stderr.puts(format_with_bang(message))
           run(current_command, ["--help"])
-          exit(1)
+          # exit(1)
         end
       end
 
-      def get_cmd(cmd)
-        commands[cmd] || commands[command_aliases[cmd]]
-      end
-
       def run(cmd, arguments=[])
-        klass = prepare_run(cmd, arguments.dup)
-        klass.call(arguments)
+        @current_cmd = prepare_run(cmd)
+        @current_options, @current_args = current_cmd.parse(arguments.dup)
+        @current_cmd.call(@current_options, @current_args)
       end
 
-      def prepare_run(cmd, args=[])
-        puts cmd, args
-        command = get_cmd(cmd)
-        puts command
+      def prepare_run(command)
+        cmd_name, sub_cmd_name = command.split(':')
+        if global_commands.has_key?(command)
+          @current_cmd = global_commands[cmd_name]
+        elsif !Topics[cmd_name].nil?
+          sub_cmd_name = 'index' if sub_cmd_name.nil?
+          @current_topic = Topics[cmd_name]
+          @current_cmd = current_topic.commands[sub_cmd_name]
+        else
+          @current_cmd = global_commands[:help]
+        end
+        return @current_cmd
       end
     end
+
     class << self
       include ClassMethods
-#      global_option :help,    "-h", "--help"
     end
   end
+
 end

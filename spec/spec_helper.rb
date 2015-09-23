@@ -29,6 +29,31 @@ end
 class Topic < Clitopic::Topic::Base
 end
 
+class RootCmd < Clitopic::Command::Base
+  register name: 'root_cmd',
+  description: "descrption1",
+  banner: "banner1"
+end
+
+class TopicaCmd < Clitopic::Command::Base
+  register name: 'cmd',
+  description: "descrption_cmd",
+  banner: "banner_cmd",
+  topic: 'a'
+end
+
+class TopicaIndex < Clitopic::Command::Base
+  register name: 'index', topic: 'a'
+end
+
+class TopicbIndex < Clitopic::Command::Base
+  register name: 'index', topic: TopicB
+end
+
+class TopiccIndex < Clitopic::Command::Base
+  register name: 'index', topic: {name: 'c', description: 'topic c'}
+end
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
