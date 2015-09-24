@@ -19,7 +19,7 @@ module Clitopic
       $stdout.sync = true if $stdout.isatty
       command = args.shift.strip rescue "help"
       if !commands_dir.nil?
-        Clitopic::Commands.load(Clitopic.commands_dir)
+        Clitopic::Commands.load_commands(Clitopic.commands_dir)
       end
       Clitopic::Commands.run(command, args)
     rescue Errno::EPIPE => e

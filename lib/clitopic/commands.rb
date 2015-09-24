@@ -5,6 +5,11 @@ module Clitopic
     module ClassMethods
       attr_accessor :binary, :current_cmd, :current_topic
 
+      def load_commands(dir)
+        Dir[File.join(dir, "*.rb")].each do |file|
+          require file
+        end
+      end
 
       def current_args
         @current_args
