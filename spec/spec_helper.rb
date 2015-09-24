@@ -14,6 +14,11 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'simplecov'
+SimpleCov.start do
+  add_filter 'spec/'
+  add_group 'lib', 'lib'
+end
 
 require 'clitopic'
 class TopicA < Clitopic::Topic::Base

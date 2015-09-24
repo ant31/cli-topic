@@ -9,7 +9,7 @@ module Clitopic
       def initialize(opts={}, force=false)
         opts = {hidden: false}.merge(opts)
         if !opts.has_key?(:name)
-          raise ArgumentError("missing name")
+          raise ArgumentError.new("missing Topic name")
         end
         @description = opts[:description]
         @name = opts[:name]
@@ -19,10 +19,6 @@ module Clitopic
 
       def commands
         @commands ||= {}
-      end
-
-      def command_aliases
-        @@command_aliases ||= {}
       end
 
       def name(arg=nil)

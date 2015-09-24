@@ -82,7 +82,7 @@ module Clitopic
         def register(opts={})
           opts = {hidden: false}.merge(opts)
           if !opts.has_key?(:name)
-            raise ArgumentError("missing name")
+            raise ArgumentError.new("missing Command name")
           end
 
           topic(opts[:topic])

@@ -7,4 +7,6 @@ gem 'clamp'
 group :development, :test do
   gem 'rspec'
   gem 'rake'
+  gem 'simplecov', :require => false
+
 end

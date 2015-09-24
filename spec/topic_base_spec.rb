@@ -15,6 +15,10 @@ describe Clitopic::Topic::Base do
       expect {Topic.register(name: 'a', description: 'a bis')}.to raise_error Clitopic::TopicAlreadyExists
     end
 
+    it 'should raise if no name is given' do
+      expect {Topic.register(description: 'a bis')}.to raise_error ArgumentError
+    end
+
     it '.name should return name registred' do
       expect(Clitopic::Topics['a'].name).to eq 'a'
     end
