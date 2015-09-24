@@ -19,7 +19,7 @@ module Clitopic
       end
 
       def global_commands
-        @global_commands ||= {help: 'help'}
+        @global_commands ||= {}
       end
 
       def global_option(name, *args, &blk)
@@ -54,23 +54,23 @@ module Clitopic
       end
 
       def run(cmd, arguments=[])
-        @current_cmd = prepare_run(cmd)
+        @current_cmd, @current_topic = find_cmd(cmd)
         @current_options, @current_args = current_cmd.parse(arguments.dup)
         @current_cmd.call(@current_options, @current_args)
       end
 
-      def prepare_run(command)
+      def find_cmd(command)
         cmd_name, sub_cmd_name = command.split(':')
         if global_commands.has_key?(command)
-          @current_cmd = global_commands[cmd_name]
+          current_cmd = global_commands[cmd_name]
         elsif !Topics[cmd_name].nil?
           sub_cmd_name = 'index' if sub_cmd_name.nil?
-          @current_topic = Topics[cmd_name]
-          @current_cmd = current_topic.commands[sub_cmd_name]
+          current_topic = Topics[cmd_name]
+          current_cmd = current_topic.commands[sub_cmd_name]
         else
-          @current_cmd = global_commands[:help]
+          current_cmd = global_commands[:help]
         end
-        return @current_cmd
+        return current_cmd, current_topic
       end
     end
 

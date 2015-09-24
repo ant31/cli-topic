@@ -22,7 +22,7 @@ module Clitopic
         options
       end
 
-      def parse(args)
+      def parser
         @opt_parser = OptionParser.new do |parser|
           # remove OptionParsers Officious['version'] to avoid conflicts
           # see: https://github.com/ruby/ruby/blob/trunk/lib/optparse.rb#L814
@@ -38,10 +38,17 @@ module Clitopic
           # Try it and see!
           parser.on_tail("-h", "--help", "Show this message") do
             puts parser
-            exit
           end
         end
-        @opt_parser.parse!(args)
+        return @opt_parser
+      end
+
+      def help
+        parser.to_s
+      end
+
+      def parse(args)
+        parser.parse!(args)
         @args = args
         return @options, @args
       end

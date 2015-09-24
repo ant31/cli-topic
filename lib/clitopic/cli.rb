@@ -3,7 +3,7 @@ require 'clitopic/commands'
 module Clitopic
   PARSERS = {optparse: Clitopic::Parser::OptParser, dummy: Clitopic::Parser::Dummy}
   class << self
-    attr_accessor :debug, :commands_dir, :parser, :default_parser
+    attr_accessor :debug, :commands_dir, :parser, :default_parser, :version
 
     def parser
       @parser ||= default_parser

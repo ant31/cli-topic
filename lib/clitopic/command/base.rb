@@ -1,5 +1,5 @@
 require 'clitopic/parsers'
-require 'clitopic/topic_base'
+require 'clitopic/topic'
 
 module Clitopic
   module Command

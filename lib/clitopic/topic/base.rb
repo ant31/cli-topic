@@ -4,7 +4,7 @@ require 'clitopic/topics'
 module Clitopic
   module Topic
     class Base
-      attr_accessor :name, :description, :short_description, :hidden
+      attr_accessor :name, :description, :short_description, :hidden, :banner
 
       def initialize(opts={}, force=false)
         opts = {hidden: false}.merge(opts)
@@ -14,7 +14,7 @@ module Clitopic
         @description = opts[:description]
         @name = opts[:name]
         @hidden = opts[:hidden]
-        @short_description = opts[:short_description]
+        @banner = opts[:banner]
       end
 
       def commands
