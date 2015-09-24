@@ -1,7 +1,19 @@
+require 'clitopic/parsers'
 require 'clitopic/commands'
 module Clitopic
+  PARSERS = {optparse: Clitopic::Parser::OptParser, dummy: Clitopic::Parser::Dummy}
   class << self
-    attr_accessor :debug, :commands_dir
+    attr_accessor :debug, :commands_dir, :parser, :default_parser
+
+    def parser
+      @parser ||= default_parser
+    end
+
+    def parser=(name)
+      Clitopic::Command::Base.extend name
+      @parser = name
+    end
+
     def run(args)
       $stdin.sync = true if $stdin.isatty
       $stdout.sync = true if $stdout.isatty
