@@ -61,7 +61,7 @@ module Clitopic
       def run(cmd, arguments=[])
         @current_cmd, @current_topic = find_cmd(cmd)
         @current_options, @current_args = current_cmd.parse(arguments.dup)
-        @current_cmd.call(@current_options, @current_args)
+        @current_cmd.call
       end
 
       def find_cmd(command)

@@ -59,7 +59,7 @@ module Clitopic
           display_topics
         end
 
-        def call(options, arguments)
+        def call
           if options[:all] == true
             display_all
           elsif options[:topics] == true

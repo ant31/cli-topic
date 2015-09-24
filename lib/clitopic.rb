@@ -12,3 +12,6 @@ require 'clitopic/topic'
 
 Clitopic.version = Clitopic::VERSION
 Clitopic::Commands.global_option(:v, "--version", "-v", "Show version") {puts Clitopic.version}
+Clitopic::Commands.global_option(:load_defaults, "--defaults-file FILE", "Load default variables") do |file|
+  Clitopic::Commands.current_cmd.load_defaults(file)
+end

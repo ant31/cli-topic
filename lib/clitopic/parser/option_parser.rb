@@ -10,11 +10,11 @@ module Clitopic
             if option[:proc]
               option[:proc].call(value)
             end
-            name = option[:name].gsub('-', '_').to_sym
+            name = option[:name]
             if options.has_key?(name) && options[name].is_a?(Array)
               options[name] += value
             else
-              puts "Warning: already defined option: --#{option[:name]} #{options[name]}" if options.has_key?(name)
+              puts "Warning: already defined option: --#{option[:name]} #{options[name]}" if options.has_key?(name) && option[:default] == nil
               options[name] = value
             end
             end
@@ -38,6 +38,7 @@ module Clitopic
           # Try it and see!
           parser.on_tail("-h", "--help", "Show this message") do
             puts parser
+            exit 0
           end
         end
         return @opt_parser
@@ -49,8 +50,8 @@ module Clitopic
 
       def parse(args)
         parser.parse!(args)
-        @args = args
-        return @options, @args
+        @arguments = args
+        return @options, @arguments
       end
 
     end

@@ -7,7 +7,7 @@ module Clitopic
       description: "Display version",
       banner: "Display version"
       class  << self
-        def call(options, arguments)
+        def call
           puts Clitopic.version
         end
       end

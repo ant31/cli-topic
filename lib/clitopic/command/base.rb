@@ -9,8 +9,22 @@ module Clitopic
 
         attr_accessor :name, :banner, :description, :short_description, :hidden
 
-        def call(opts, args=[])
-          puts "call with #{opts} #{args}"
+        def call()
+          puts "call with #{options} #{arguments}"
+        end
+
+        def load_defaults(file)
+          defaults = YAML.load_file(file)
+          if self.topic.nil?
+            cmd_defaults = defaults[self.name]
+          else
+            cmd_defaults = defaults[self.topic.name][self.name]
+          end
+          cmd_defaults.each do |name, value|
+            if !value.nil?
+              options[name] = value
+            end
+          end
         end
 
         def topic(arg=nil)
