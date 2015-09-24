@@ -7,7 +7,7 @@ module Clitopic
 
       def option(name, *args, &blk)
         # args.sort.reverse gives -l, --long order
-        cmd_options << { :name => name.to_s, :args => args.sort.reverse, :proc => blk }
+        cmd_options << { :name => name.to_s, :args => args, :proc => blk }
       end
 
       def options
