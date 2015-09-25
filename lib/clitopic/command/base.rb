@@ -13,7 +13,19 @@ module Clitopic
           puts "call with #{options} #{arguments}"
         end
 
-        def load_defaults(file)
+        def load_defaults(file=nil)
+          if file.nil?
+            Clitopic.default_files.each do |f|
+              if File.exist?(f)
+                file = f
+                break
+              end
+            end
+          end
+          if file.nil?
+            return
+          end
+
           defaults = YAML.load_file(file)
           if self.topic.nil?
             cmd_defaults = defaults[self.name]
@@ -22,7 +34,11 @@ module Clitopic
           end
           cmd_defaults.each do |name, value|
             if !value.nil?
-              options[name] = value
+              if options[name].nil?
+                options[name] = value
+              elsif options[name].is_a?(Array)
+                options[name] += value
+              end
             end
           end
         end
@@ -64,47 +80,3 @@ module Clitopic
     end
   end
 end
-
-class ImagePush < Clitopic::Command::Base
-  register name: 'push',
-  description: "descrption1",
-  banner: "banner1",
-  topic: {name: "image", description: "titi"}
-end
-# module Image
-#   class Topic < Clitopic::Topic::Base
-#     register name: 'image', description: 'Manage docker images'
-#     topic_option '-a', '--all'
-#   end
-
-#   class Build < Clitopic::Command::Base
-#     topic 'image'
-#     register name: 'build', description: 'build docker images'
-#     # topic MyImageTopic
-#     # topic 'image', "description", false
-#     option "-a", "--all"
-#     #custom parse
-#     def parse_options(args)
-#     end
-
-#     def run(options, arguments)
-#       action
-#     end
-#   end
-
-#   class Push < Clitopic::Command::Base
-#     topic 'image'
-#     topic MyImageTopic
-#     topic 'image', "description", false
-#     option "-a", "--all"
-
-#     #custom parse
-#     def parse_options(args)
-#     end
-
-#     def call(options, arguments)
-#       action
-#     end
-#   end
-
-# end

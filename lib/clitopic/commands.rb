@@ -61,6 +61,9 @@ module Clitopic
       def run(cmd, arguments=[])
         @current_cmd, @current_topic = find_cmd(cmd)
         @current_options, @current_args = current_cmd.parse(arguments.dup)
+        if @current_cmd.options[:load_defaults] != true && Clitopic.load_defaults?
+          @current_cmd.load_defaults
+        end
         @current_cmd.call
       end
 

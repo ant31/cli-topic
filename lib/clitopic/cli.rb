@@ -3,10 +3,14 @@ require 'clitopic/commands'
 module Clitopic
   PARSERS = {optparse: Clitopic::Parser::OptParser, dummy: Clitopic::Parser::Dummy}
   class << self
-    attr_accessor :debug, :commands_dir, :parser, :default_parser, :version
+    attr_accessor :debug, :commands_dir, :parser, :default_parser, :version, :default_files, :load_defaults
 
     def parser
       @parser ||= default_parser
+    end
+
+    def load_defaults?
+      @load_defaults ||= true
     end
 
     def parser=(name)

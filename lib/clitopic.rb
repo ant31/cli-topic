@@ -15,3 +15,5 @@ Clitopic::Commands.global_option(:v, "--version", "-v", "Show version") {puts Cl
 Clitopic::Commands.global_option(:load_defaults, "--defaults-file FILE", "Load default variables") do |file|
   Clitopic::Commands.current_cmd.load_defaults(file)
 end
+Clitopic.load_defaults = true
+Clitopic.default_files = [File.join(Dir.getwd, ".clitopic.yml"), File.join(Dir.home, ".clitopic.yml")]

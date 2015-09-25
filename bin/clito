@@ -2,3 +2,4 @@
 
 require 'clitopic'
 Clitopic.run(ARGV)
+puts Clitopic.default_files

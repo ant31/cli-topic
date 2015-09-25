@@ -14,10 +14,10 @@ module Clitopic
       banner: "Display helps",
       topic: "help"
 
-      option :all, "--all"
-      option :topics, "--topics"
-      option :topic, "--topic=TOPIC"
-
+      option :all, "--all", "Display all topics with all commands"
+      option :topics, "--topics", "Display all availables topics"
+      option :topic, "--topic=TOPIC", "Display availables commands for the TOPIC"
+      option :with_hidden, "--with-hidden", "Include hidden commands/topics"
       class  << self
 
         def display_globals
@@ -28,22 +28,26 @@ module Clitopic
         end
 
         def display_cmd(cmd, topic=nil)
-          if topic.nil?
-            puts "----- #{cmd.name} -------"
-          elsif cmd.name == 'index'
-            puts "----- #{topic.name} -------"
-          else
-            puts "----- #{topic.name}:#{cmd.name} -------"
+          if cmd.hidden == false || options[:with_hidden] == true
+            if topic.nil?
+              puts "----- #{cmd.name} -------"
+            elsif cmd.name == 'index'
+              puts "----- #{topic.name} -------"
+            else
+              puts "----- #{topic.name}:#{cmd.name} -------"
+            end
+            puts cmd.help
+            puts "\n\n"
           end
-          puts cmd.help
-          puts "\n\n"
         end
 
         def display_topic(topic_name)
           topic = Topics[topic_name]
-          puts "-- #{topic_name} \t\t #{topic.banner || topic.description}"
-          topic.commands.each do |cmd_name, cmd|
-            puts " + #{topic_name}:#{cmd_name} \t\t #{cmd.banner}"
+          if topic.hidden == false || options[:with_hidden] == true
+            puts "-- #{topic_name} \t\t #{topic.banner || topic.description}"
+            topic.commands.each do |cmd_name, cmd|
+              puts " + #{topic_name}:#{cmd_name} \t\t #{cmd.banner}"
+            end
           end
         end
 
