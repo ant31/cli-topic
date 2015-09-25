@@ -28,7 +28,13 @@ module Clitopic
           # see: https://github.com/ruby/ruby/blob/trunk/lib/optparse.rb#L814
           parser.banner = self.banner unless self.banner.nil?
           parser.base.long.delete('version')
-          process_options(parser, cmd_options)
+          process_options(parser, self.cmd_options)
+
+          if !self.topic.nil? && self.topic.topic_options.size > 0
+            parser.separator ""
+            parser.separator "Topic options:"
+            process_options(parser, self.topic.topic_options)
+          end
 
           parser.separator ""
           parser.separator "Common options:"

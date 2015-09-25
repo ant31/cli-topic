@@ -1,3 +1,5 @@
+require 'clitopic/utils'
+
 module Clitopic
   module Commands
     class CommandFailed  < RuntimeError; end
@@ -29,7 +31,7 @@ module Clitopic
 
       def global_option(name, *args, &blk)
         # args.sort.reverse gives -l, --long order
-        global_options << { :name => name.to_s, :args => args, :proc => blk }
+        global_options << Clitopic::Utils.parse_option(name, *args, &blk)
       end
 
       def invalid_arguments

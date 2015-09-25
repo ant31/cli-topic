@@ -1,5 +1,6 @@
 require 'set'
 require 'clitopic/topics'
+require 'clitopic/utils'
 
 module Clitopic
   module Topic
@@ -33,12 +34,28 @@ module Clitopic
         @hidden ||= arg
       end
 
+      def topic_options
+        self.class.topic_options
+      end
+
       alias :hidden? :hidden
 
       private
 
       class << self
         attr_accessor :instance
+        def option(name, *args, &blk)
+          opt = Clitopic::Utils.parse_option(name, *args, &blk)
+          if !opt[:default].nil?
+            options[name] = opt[:default]
+          end
+          topic_options << opt
+        end
+
+        def topic_options
+          @topic_options ||= []
+        end
+
         def register(opts={}, force=false)
           topic = self.new(opts, force)
           if Topics[topic.name].nil? && force
