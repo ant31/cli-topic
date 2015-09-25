@@ -22,6 +22,7 @@ module Clitopic
               end
             end
           end
+
           if file.nil?
             return
           end
@@ -32,6 +33,11 @@ module Clitopic
           else
             cmd_defaults = defaults[self.topic.name][self.name]
           end
+
+          if cmd_defaults.nil?
+            return
+          end
+
           cmd_defaults.each do |name, value|
             if !value.nil?
               if options[name].nil?

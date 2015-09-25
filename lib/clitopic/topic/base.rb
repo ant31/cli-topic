@@ -41,7 +41,7 @@ module Clitopic
         attr_accessor :instance
         def register(opts={}, force=false)
           topic = self.new(opts, force)
-          if !Topics[topic.name].nil? && !force
+          if Topics[topic.name].nil? && force
             raise TopicAlreadyExists.new ("Topic: #{topic.name} already exists: #{Topics[topic.name].class.name}")
           else
             if self.class != Clitopic::Topic::Base

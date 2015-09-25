@@ -3,11 +3,17 @@ require 'clitopic/command/base'
 
 module Clitopic
   module Command
+    class ClitoTopic < Clitopic::Topic::Base
+      register name: 'clito',
+        description: 'clitopic commands',
+        hidden: true
+    end
+
     class DefaultFile < Clitopic::Command::Base
       register name: 'defaults_file',
       description: "create default file",
       hidden: true,
-      topic: {name: 'clito', description: 'clitopic commands', hidden: true}
+      topic: 'clito'
 
       option :merge, "--[no-]merge", "Merge options with current file", default: true
       option :force, "-f", "--force", "Overwrite file", default: false
@@ -61,6 +67,20 @@ module Clitopic
         end
       end
 
+    end
+
+    class ClitoVersion < Clitopic::Command::Base
+      register name: 'version',
+      description: "Display clitopic version",
+      banner: "Display clitopic version",
+      hidden: true,
+      topic: 'clito'
+
+      class  << self
+        def call
+          puts "cli-topic version: #{Clitopic::VERSION}"
+        end
+      end
     end
   end
 end
