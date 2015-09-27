@@ -1,9 +1,9 @@
 require 'optparse'
+require 'clitopic/commands'
+
 module Clitopic
   module Parser
     module OptParser
-      include Clitopic::Parser::Base
-
       def process_options(parser, opts)
         opts.each do |option|
           parser.on(*option[:args]) do |value|

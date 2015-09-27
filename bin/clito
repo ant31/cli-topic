@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'clitopic'
-Clitopic.run(ARGV)
+require 'clitopic/cli'
+Clitopic::Cli.run(ARGV)
 puts Clitopic.default_files

@@ -1,10 +1,9 @@
 module Clitopic
   module Parser
     module Dummy
-      include Clitopic::Parser::Base
 
-      def process_options(parser, opts)
-
+      def help
+        puts parse
       end
 
       def parse(args)

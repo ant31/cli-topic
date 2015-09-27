@@ -1,3 +1,4 @@
+require 'clitopic/utils'
 require 'clitopic/parsers'
 require 'clitopic/topic'
 
@@ -8,9 +9,31 @@ module Clitopic
         include Clitopic.parser
 
         attr_accessor :name, :banner, :description, :short_description, :hidden
+        attr_accessor :arguments, :options
+
+        def cmd_options
+          @cmd_options ||= []
+        end
+
+        def option(name, *args, &blk)
+          opt = Clitopic::Utils.parse_option(name, *args, &blk)
+          if !opt[:default].nil?
+            options[name] = opt[:default]
+          end
+          cmd_options << opt
+        end
+
 
         def call()
           puts "call with #{options} #{arguments}"
+        end
+
+        def arguments
+          @arguments ||= []
+        end
+
+        def options
+          @options ||= {}
         end
 
         def load_defaults(file=nil)
@@ -38,7 +61,7 @@ module Clitopic
             return
           end
 
-          cmd_defaults.each do |name, value|
+          cmd_defaults[:options].each do |name, value|
             if !value.nil?
               if options[name].nil?
                 options[name] = value
@@ -46,6 +69,9 @@ module Clitopic
                 options[name] += value
               end
             end
+          end
+          if cmd_defaults[:arguments] && !arguments
+            arguments += Array(cmd_defaults[:arguments])
           end
         end
 

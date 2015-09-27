@@ -44,9 +44,9 @@ module Clitopic
         def display_topic(topic_name)
           topic = Topics[topic_name]
           if topic.hidden == false || options[:with_hidden] == true
-            puts "-- #{topic_name} \t\t #{topic.banner || topic.description}"
+            puts "-- #{topic_name}" + "#{topic.banner || topic.description}".rjust(50)
             topic.commands.each do |cmd_name, cmd|
-              puts " + #{topic_name}:#{cmd_name} \t\t #{cmd.banner}"
+              puts " + #{topic_name}:#{cmd_name}" + "#{cmd.banner}".rjust(50)
             end
           end
         end

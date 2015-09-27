@@ -1,4 +1,14 @@
 class String
+  def indent!(amount, indent_string=nil, indent_empty_lines=false)
+    indent_string = indent_string || self[/^[ \t]/] || ' '
+    re = indent_empty_lines ? /^/ : /^(?!$)/
+    gsub!(re, indent_string * amount)
+  end
+
+  def indent(amount, indent_string=nil, indent_empty_lines=false)
+    dup.tap {|_| _.indent!(amount, indent_string, indent_empty_lines)}
+  end
+
   def underscore
     self.gsub(/::/, '/').
     gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
@@ -11,6 +21,29 @@ end
 module Clitopic
   module Utils
     class << self
+      def has_git?
+        %x{ git --version }
+        $?.success?
+      end
+
+      def git(args)
+        return "" unless has_git?
+        flattened_args = [args].flatten.compact.join(" ")
+        %x{ git #{flattened_args} 2>&1 }.strip
+      end
+
+      def retry_on_exception(*exceptions)
+        retry_count = 0
+        begin
+          yield
+        rescue *exceptions => ex
+          raise ex if retry_count >= 3
+          sleep 3
+          retry_count += 1
+          retry
+        end
+      end
+
       def parse_option(name, *args, &blk)
         # args.sort.reverse gives -l, --long order
         default = nil

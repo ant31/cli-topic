@@ -1,4 +1,5 @@
 require 'clitopic/utils'
+require 'clitopic/topics'
 
 module Clitopic
   module Commands

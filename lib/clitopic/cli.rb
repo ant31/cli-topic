@@ -1,47 +1,34 @@
-require 'clitopic/parsers'
 require 'clitopic/commands'
+require 'clitopic/command'
+require 'clitopic/helpers'
 module Clitopic
-  PARSERS = {optparse: Clitopic::Parser::OptParser, dummy: Clitopic::Parser::Dummy}
-  class << self
-    attr_accessor :debug, :commands_dir, :parser, :default_parser, :version, :default_files, :load_defaults
+  module Cli
 
-    def parser
-      @parser ||= default_parser
-    end
+    class << self
 
-    def load_defaults?
-      @load_defaults ||= true
-    end
-
-    def parser=(name)
-      Clitopic::Command::Base.extend name
-      @parser = name
-    end
-
-    def run(args)
-      $stdin.sync = true if $stdin.isatty
-      $stdout.sync = true if $stdout.isatty
-      command = args.shift.strip rescue "help"
-      if !commands_dir.nil?
-        Clitopic::Commands.load_commands(Clitopic.commands_dir)
-      end
-      Clitopic::Commands.run(command, args)
-    rescue Errno::EPIPE => e
-      puts e.message #error(e.message)
-      puts e.backtrace
-    rescue Interrupt => e
-      `stty icanon echo`
-      if Clitopic.debug
-        puts e.message #        styled_error(e)
+      def run(args)
+        args = args.dup
+        $stdin.sync = true if $stdin.isatty
+        $stdout.sync = true if $stdout.isatty
+        command = args.shift.strip rescue "help"
+        if !Clitopic.commands_dir.nil?
+          Clitopic::Commands.load_commands(Clitopic.commands_dir)
+        end
+        Clitopic::Commands.run(command, args)
+      rescue Errno::EPIPE => e
+        puts e.message #error(e.message)
         puts e.backtrace
-      else
-        puts e #.message error("Command cancelled.", false)
+      rescue Interrupt => e
+        `stty icanon echo`
+        if Clitopic.debug
+          Clitopic::Helpers.styled_error(e)
+        else
+          Clitopic::Helpers.error("Command cancelled.", false)
+        end
+      rescue => error
+        Clitopic::Helpers.styled_error(error)
+        exit(1)
       end
-    rescue => error
-      puts error.message # styled_error(error)
-      puts error.backtrace
-      #      exit(1)
     end
   end
-
 end
