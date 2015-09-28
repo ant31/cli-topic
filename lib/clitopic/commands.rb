@@ -44,26 +44,56 @@ module Clitopic
         @invalid_arguments.shift.dup rescue nil
       end
 
-      def validate_arguments!
-        unless invalid_arguments.empty?
-          arguments = invalid_arguments.map {|arg| "\"#{arg}\""}
+      def validate_arguments!(invalid_options)
+        unless invalid_options.empty?
+          arguments = invalid_options.map {|arg| "\"#{arg}\""}
           if arguments.length == 1
-            message = "Invalid argument: #{arguments.first}"
+            message = "Invalid option: #{arguments.first}"
           elsif arguments.length > 1
-            message = "Invalid arguments: "
+            message = "Invalid options: "
             message << arguments[0...-1].join(", ")
             message << " and "
             message << arguments[-1]
           end
-          $stderr.puts(format_with_bang(message))
-          run(current_command, ["--help"])
-          # exit(1)
+          $stderr.puts(Clitopic::Helpers.format_with_bang(message) + "\n\n")
+          run(@current_cmd.fullname, ["--help"])
         end
       end
 
+      def all_commands
+        cmds = []
+        Topics.topics.each do |k,topic|
+          topic.commands.each do |name, cmd|
+            if name == 'index'
+              cmds << topic.name
+            else
+              cmds << "#{topic.name}:#{name}"
+            end
+          end
+        end
+        cmds += global_commands.keys
+        return cmds
+      end
+
+      def prepare_run(cmd, arguments)
+        @current_options, @current_args = cmd.parse(arguments.dup)
+      rescue OptionParser::ParseError => e
+        $stderr.puts Clitopic::Helpers.format_with_bang(e.message)
+        run("help", [cmd.fullname])
+      end
+
       def run(cmd, arguments=[])
+        if cmd == "-h" || cmd == "--help"
+          cmd = 'help'
+        end
         @current_cmd, @current_topic = find_cmd(cmd)
-        @current_options, @current_args = current_cmd.parse(arguments.dup)
+        if !@current_cmd
+          Clitopic::Helpers.error([ "`#{cmd}` is not a command.",
+                                    Clitopic::Helpers.display_suggestion(cmd, all_commands),
+                                    "See `help` for a list of available commands."
+                                  ].compact.join("\n\n"))
+        end
+        prepare_run(@current_cmd, arguments)
         if @current_cmd.options[:load_defaults] != true && Clitopic.load_defaults?
           @current_cmd.load_defaults
         end

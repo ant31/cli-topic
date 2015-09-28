@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.files = FileList['README.md', 'License', 'Changelog', 'lib/**/*.rb', 'lib/vendor/**/*.rb'].to_a
   s.test_files = FileList['spec/**/*.rb', 'spec/*.rb'].to_a
 
-
+  s.executables << 'clito'
   s.add_development_dependency "rspec",
 
   s.required_ruby_version = '>= 1.9.2'

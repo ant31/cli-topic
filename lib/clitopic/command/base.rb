@@ -8,11 +8,24 @@ module Clitopic
       class << self
         include Clitopic.parser
 
-        attr_accessor :name, :banner, :description, :short_description, :hidden
+        attr_accessor :name, :banner, :description, :hidden, :short_description
         attr_accessor :arguments, :options
 
         def cmd_options
           @cmd_options ||= []
+        end
+
+        def banner
+          @banner ||= "Usage: #{Clitopic.name} #{self.fullname} [options]"
+        end
+
+        def short_description
+          if @short_description.nil?
+            if description
+              @short_description = description.split("\n").first
+            end
+          end
+          return @short_description
         end
 
         def option(name, *args, &blk)
@@ -23,6 +36,15 @@ module Clitopic
           cmd_options << opt
         end
 
+        def fullname
+          if topic.nil?
+            return name
+          elsif name == 'index'
+            "#{topic.name}"
+          else
+            "#{topic.name}:#{name}"
+          end
+        end
 
         def call()
           puts "call with #{options} #{arguments}"

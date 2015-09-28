@@ -13,6 +13,7 @@ module Clitopic
           raise ArgumentError.new("missing Topic name")
         end
         @description = opts[:description]
+        @short_description = opts[:short_description]
         @name = opts[:name]
         @hidden = opts[:hidden]
         @banner = opts[:banner]
@@ -20,6 +21,16 @@ module Clitopic
 
       def commands
         @commands ||= {}
+      end
+
+
+      def short_description
+        if @short_description.nil?
+          if description
+            @short_description = description.split("\n").first
+          end
+        end
+        return @short_description
       end
 
       def name(arg=nil)

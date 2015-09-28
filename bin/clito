@@ -3,4 +3,3 @@
 require 'clitopic'
 require 'clitopic/cli'
 Clitopic::Cli.run(ARGV)
-puts Clitopic.default_files

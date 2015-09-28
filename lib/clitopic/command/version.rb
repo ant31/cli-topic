@@ -5,8 +5,13 @@ module Clitopic
 
     class Version < Clitopic::Command::Base
       register name: 'version',
-      description: "Display version",
-      banner: "Display version"
+      description: "show #{Clitopic.name} current version
+
+Example:
+
+ $ #{Clitopic.name} version
+ #{Clitopic.version}
+"
       class  << self
         def call
           puts Clitopic.version

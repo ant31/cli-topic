@@ -1,5 +1,6 @@
 require 'yaml'
 require 'clitopic/command/base'
+require 'clitopic/helpers'
 
 module Clitopic
   module Command
@@ -7,6 +8,18 @@ module Clitopic
       register name: 'clito',
         description: 'clitopic commands',
         hidden: true
+    end
+
+    class Suggestions < Clitopic::Command::Base
+      register name: 'suggestions',
+      description: 'suggests available commands base on incomplete input',
+      hidden: true,
+      topic: 'clito'
+
+      def self.call
+        puts Clitopic::Helpers.suggestion(@arguments[0], Clitopic::Commands.all_commands)
+      end
+
     end
 
     class DefaultFile < Clitopic::Command::Base
@@ -73,7 +86,6 @@ module Clitopic
     class ClitoVersion < Clitopic::Command::Base
       register name: 'version',
       description: "Display clitopic version",
-      banner: "Display clitopic version",
       hidden: true,
       topic: 'clito'
 

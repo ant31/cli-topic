@@ -529,23 +529,35 @@ module Clitopic
       distances[first.length][last.length]
     end
 
-    def suggestion(actual, possibilities)
-      distances = Hash.new {|hash,key| hash[key] = []}
+    def display_suggestion(actual, possibilities, allowed_distance=4)
+      suggestions = suggestion(actual, possibilities, allowed_distance)
+      if suggestions.length == 1
+        "Perhaps you meant:\n" + suggestions.first.indent(20)
+      elsif suggestions.length > 1
+        "Perhaps you meant:\n" + "#{suggestions.map {|suggestion| "- #{suggestion}"}.join("\n").indent(2)}."
+      else
+        nil
+      end
+    end
 
+    def suggestion(actual, possibilities, allowed_distance=4)
+      distances = Hash.new {|hash,key| hash[key] = []}
+      begin_with = []
       possibilities.each do |suggestion|
-        distances[string_distance(actual, suggestion)] << suggestion
+        if suggestion.start_with?(actual)
+          distances[0] << suggestion
+        else
+          distances[string_distance(actual, suggestion)] << suggestion
+        end
       end
 
       minimum_distance = distances.keys.min
-      if minimum_distance < 4
+
+      if minimum_distance < allowed_distance
         suggestions = distances[minimum_distance].sort
-        if suggestions.length == 1
-          "Perhaps you meant `#{suggestions.first}`."
-        else
-          "Perhaps you meant #{suggestions[0...-1].map {|suggestion| "`#{suggestion}`"}.join(', ')} or `#{suggestions.last}`."
-        end
+        return suggestions
       else
-        nil
+        []
       end
     end
 
