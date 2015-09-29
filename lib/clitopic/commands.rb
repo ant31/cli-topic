@@ -109,7 +109,7 @@ module Clitopic
           current_topic = Topics[cmd_name]
           current_cmd = current_topic.commands[sub_cmd_name]
         else
-          current_cmd = global_commands[:help]
+          return nil, nil
         end
         return current_cmd, current_topic
       end

@@ -7,44 +7,47 @@ describe Clitopic::Commands do
       expect(Clitopic::Commands.global_commands['root_cmd']).to eq RootCmd
     end
 
-    context ".prepare_run" do
-      it "should set @current_cmd" do
-        Clitopic::Commands.prepare_run("root_cmd")
-        expect(Clitopic::Commands.current_cmd).to eq RootCmd
+    context ".find_cmd" do
+      it "should set current_cmd" do
+        cmd, topic = Clitopic::Commands.find_cmd("root_cmd")
+        expect(cmd).to eq RootCmd
       end
 
-      it "@current_topic should be nil" do
-        Clitopic::Commands.prepare_run("root_cmd")
-        expect(Clitopic::Commands.current_topic).to be nil
+      it "topic should be nil" do
+        cmd, topic = Clitopic::Commands.find_cmd("root_cmd")
+        expect(topic).to be nil
       end
 
-      it "should rescue to help cmd" do
-        Clitopic::Commands.prepare_run("unknowncmd")
-        expect(Clitopic::Commands.current_cmd).to eq 'help'
+      it "unknow cmd should return nil" do
+        cmd, topic = Clitopic::Commands.find_cmd("unknowncmd")
+        expect(cmd).to eq nil
+        expect(topic).to eq nil
       end
     end
   end
 
   context 'With topic' do
-    context ".prepare_run" do
-      it "should set @current_cmd" do
-      Clitopic::Commands.prepare_run("a:cmd")
-        expect(Clitopic::Commands.current_cmd).to eq TopicaCmd
+    context ".find_cmd" do
+      it "command should be TopicaCmd" do
+        cmd, topic = Clitopic::Commands.find_cmd("a:cmd")
+        expect(cmd).to eq TopicaCmd
       end
 
-      it "@current_topic should be the topic" do
-        Clitopic::Commands.prepare_run("a:cmd")
-        expect(Clitopic::Commands.current_topic).to be_a TopicA
+      it "current_topic should be the topic 'a'" do
+        cmd, topic = Clitopic::Commands.find_cmd("a:cmd")
+        expect(topic).to be_a TopicA
       end
 
-      it "should rescue to help cmd" do
-        Clitopic::Commands.prepare_run("unknowncmd:titi")
-        expect(Clitopic::Commands.current_cmd).to eq 'help'
+      it "unknown cmd should return nil" do
+        cmd, topic = Clitopic::Commands.find_cmd("unknowncmd:titi")
+        expect(cmd).to eq nil
+        expect(topic).to eq nil
       end
 
       it "should return index Cmd if no subcommand" do
-        Clitopic::Commands.prepare_run("a")
-        expect(Clitopic::Commands.current_cmd).to eq TopicaIndex
+        cmd, index = Clitopic::Commands.find_cmd("a")
+        expect(cmd).to eq TopicaIndex
+        expect(index).to be_a TopicA
       end
 
     end

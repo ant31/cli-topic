@@ -69,7 +69,7 @@ module Clitopic
 
         def register(opts={}, force=false)
           topic = self.new(opts, force)
-          if Topics[topic.name].nil? && force
+          if Topics.topics.has_key?(topic.name) && !force
             raise TopicAlreadyExists.new ("Topic: #{topic.name} already exists: #{Topics[topic.name].class.name}")
           else
             if self.class != Clitopic::Topic::Base

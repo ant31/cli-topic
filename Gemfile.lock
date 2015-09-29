@@ -1,7 +1,6 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    clamp (1.0.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
     json (1.8.1)
@@ -28,8 +27,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  clamp
-  json
   rake
   rspec
   simplecov

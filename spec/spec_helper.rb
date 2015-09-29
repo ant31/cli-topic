@@ -21,6 +21,8 @@ SimpleCov.start do
 end
 
 require 'clitopic'
+require 'clitopic/cli'
+require 'clitopic/command'
 class TopicA < Clitopic::Topic::Base
   register name: "a",
   description: "describe a"

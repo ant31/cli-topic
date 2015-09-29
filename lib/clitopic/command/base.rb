@@ -84,6 +84,7 @@ module Clitopic
           end
 
           cmd_defaults[:options].each do |name, value|
+            name = name.to_s.to_sym
             if !value.nil?
               if options[name].nil?
                 options[name] = value
@@ -92,8 +93,9 @@ module Clitopic
               end
             end
           end
-          if cmd_defaults[:arguments] && !arguments
-            arguments += Array(cmd_defaults[:arguments])
+
+          if cmd_defaults[:args] && !arguments
+            @arguments += Array(cmd_defaults[:args])
           end
         end
 
