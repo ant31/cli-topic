@@ -15,6 +15,8 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require 'simplecov'
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
 SimpleCov.start do
   add_filter 'spec/'
   add_group 'lib', 'lib'
