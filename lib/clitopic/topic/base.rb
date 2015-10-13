@@ -49,11 +49,16 @@ module Clitopic
         self.class.topic_options
       end
 
+
       alias :hidden? :hidden
 
       private
 
       class << self
+        def options
+          @options ||= {}
+        end
+
         attr_accessor :instance
         def option(name, *args, &blk)
           opt = Clitopic::Utils.parse_option(name, *args, &blk)

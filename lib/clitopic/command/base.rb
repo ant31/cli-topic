@@ -54,6 +54,14 @@ module Clitopic
           @arguments ||= []
         end
 
+        def topic_options
+          if !self.topic.nil?
+            @topic_options ||= self.topic.class.options
+          else
+            @topic_options = {}
+          end
+        end
+
         def options
           @options ||= {}
         end
