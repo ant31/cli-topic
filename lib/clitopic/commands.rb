@@ -94,7 +94,8 @@ module Clitopic
                                   ].compact.join("\n\n"))
         end
         prepare_run(@current_cmd, arguments)
-        if @current_cmd.options[:load_defaults] != true && Clitopic.load_defaults?
+        if @current_cmd.options[:load_defaults] == true || Clitopic.load_defaults?
+          puts 'load'
           @current_cmd.load_defaults
         end
         @current_cmd.call

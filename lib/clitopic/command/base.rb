@@ -80,11 +80,16 @@ module Clitopic
             return
           end
 
-          defaults = YAML.load_file(file)
+          begin
+            defaults = YAML.load_file(file)
+          rescue
+            return
+          end
+
           if self.topic.nil?
             cmd_defaults = defaults[self.name]
           else
-            cmd_defaults = defaults[self.topic.name][self.name]
+            cmd_defaults = defaults[self.topic.name][self.name] if defaults.has_key?(self.topic.name)
           end
 
           if cmd_defaults.nil?
