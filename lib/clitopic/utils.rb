@@ -44,18 +44,23 @@ module Clitopic
         end
       end
 
-      def parse_option(name, *args, &blk)
+      def parse_option(name, *arguments, &blk)
         # args.sort.reverse gives -l, --long order
         default = nil
         required = false
-        args.each do |a|
+        args = []
+        arguments.each do |a|
           if a.is_a?(Hash)
             if a.has_key?(:default)
               default = a[:default]
+              a.delete(:default)
             end
             if a.has_key?(:required)
               required = a[:required]
+              a.delete(:required)
             end
+          else
+            args << a
           end
         end
         return { :name => name, :args => args, default: default, required: required, :proc => blk }

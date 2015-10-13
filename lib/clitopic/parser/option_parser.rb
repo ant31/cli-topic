@@ -17,7 +17,7 @@ module Clitopic
               puts "Warning: already defined option: --#{option[:name]} #{options[name]}" if options.has_key?(name) && option[:default] == nil
               options[name] = value
             end
-            end
+          end
         end
         options
       end
