@@ -63,7 +63,7 @@ module Clitopic
         end
 
         def options
-          @options ||= {}
+          @options ||= topic_options.dup
         end
 
         def load_defaults(file=nil)
