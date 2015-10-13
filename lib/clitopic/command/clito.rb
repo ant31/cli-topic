@@ -61,6 +61,7 @@ module Clitopic
               raise ArgumentError.new("File #{file} exists, use --merge or --force")
             end
             if merge && !force
+              return if not Clitopic::Helpers.confirm("Overwrite #{file} ? (y/N)")
               opts = opts.merge(YAML.load_file(file))
             end
           end
