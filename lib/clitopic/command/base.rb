@@ -66,6 +66,20 @@ module Clitopic
           @options ||= topic_options.dup
         end
 
+        def load_options(opts)
+          return if opts.nil?
+          opts.each do |name, value|
+            name = name.to_s.to_sym
+            if !value.nil?
+              if options[name].nil?
+                options[name] = value
+              elsif options[name].is_a?(Array)
+                options[name] += value
+              end
+            end
+          end
+        end
+
         def load_defaults(file=nil)
           if file.nil?
             Clitopic.default_files.each do |f|
@@ -87,25 +101,20 @@ module Clitopic
           end
 
           if self.topic.nil?
-            cmd_defaults = defaults[self.name]
+            cmd_defaults = defaults["commands"][self.name]
           else
-            cmd_defaults = defaults[self.topic.name][self.name] if defaults.has_key?(self.topic.name)
+            if defaults.has_key?(self.topic.name)
+              cmd_defaults = defaults[self.topic.name][self.name]
+              topic_opts = defaults[self.topic.name]['topic_options']
+            end
           end
 
           if cmd_defaults.nil?
             return
           end
 
-          cmd_defaults["options"].each do |name, value|
-            name = name.to_s.to_sym
-            if !value.nil?
-              if options[name].nil?
-                options[name] = value
-              elsif options[name].is_a?(Array)
-                options[name] += value
-              end
-            end
-          end
+          load_options(topic_opts)
+          load_options(cmd_defaults["options"])
 
           if cmd_defaults["args"] && !arguments
             @arguments += Array(cmd_defaults["args"])

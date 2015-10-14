@@ -37,21 +37,32 @@ module Clitopic
           if cmd.cmd_options.size > 0 && (!cmd.hidden || options[:hidden])
             opts[cmd.name] = {"options" => {}, "args" =>  []}
             cmd.cmd_options.each do |opt|
-              opts[cmd.name]["options"][opt["name"].to_s] = opt[:default]
+              opts[cmd.name]["options"][opt[:name].to_s] = opt[:default]
             end
           end
         end
 
         def dump_options(file, merge=true, force=false)
-          opts = {}
+          opts = {"common_options" => {}}
+          opts["common_options"] = {} if Clitopic::Commands.global_options.size > 0
+          Clitopic::Commands.global_options.each do |opt|
+            opts["common_options"][opt[:name].to_s] = opt[:default]
+          end
+          opts["commands"] = {} if Clitopic::Commands.global_commands.size > 0
           Clitopic::Commands.global_commands.each do |c, cmd|
-            cmd_opts(cmd, opts)
+            cmd_opts(cmd, opts["commands"])
           end
           Clitopic::Topics.topics.each do |topic_name, topic|
-            if topic.commands.size > 0 && (!topic.hidden || options[:hidden])
+            if (!topic.hidden || options[:hidden])
               opts[topic_name] = {}
-              topic.commands.each do |c, cmd|
-                cmd_opts(cmd, opts[topic_name])
+              opts[topic_name]["topic_options"] = {} if topic.topic_options.size > 0
+              topic.topic_options.each do |opt|
+                opts[topic_name]["topic_options"][opt[:name].to_s] = opt[:default]
+              end
+              if topic.commands.size > 0
+                topic.commands.each do |c, cmd|
+                  cmd_opts(cmd, opts[topic_name])
+                end
               end
             end
           end
