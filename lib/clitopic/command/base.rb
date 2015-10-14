@@ -96,7 +96,7 @@ module Clitopic
             return
           end
 
-          cmd_defaults[:options].each do |name, value|
+          cmd_defaults["options"].each do |name, value|
             name = name.to_s.to_sym
             if !value.nil?
               if options[name].nil?
@@ -107,8 +107,8 @@ module Clitopic
             end
           end
 
-          if cmd_defaults[:args] && !arguments
-            @arguments += Array(cmd_defaults[:args])
+          if cmd_defaults["args"] && !arguments
+            @arguments += Array(cmd_defaults["args"])
           end
         end
 

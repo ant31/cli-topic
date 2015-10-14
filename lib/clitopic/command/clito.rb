@@ -35,9 +35,9 @@ module Clitopic
       class << self
         def cmd_opts(cmd, opts)
           if cmd.cmd_options.size > 0 && (!cmd.hidden || options[:hidden])
-            opts[cmd.name] = {options: {}, args: []}
+            opts[cmd.name] = {"options" => {}, "args" =>  []}
             cmd.cmd_options.each do |opt|
-              opts[cmd.name][:options][opt[:name].to_s] = opt[:default]
+              opts[cmd.name]["options"][opt["name"].to_s] = opt[:default]
             end
           end
         end
