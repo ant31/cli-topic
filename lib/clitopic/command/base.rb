@@ -98,11 +98,14 @@ module Clitopic
           begin
             defaults = YAML.load_file(file)
           rescue
+            puts "failed to load defaults file: #{file}"
             return
           end
 
           if self.topic.nil?
-            cmd_defaults = defaults["commands"][self.name]
+            if defaults.has_key?("commands")
+              cmd_defaults = defaults["commands"][self.name]
+            end
           else
             if defaults.has_key?(self.topic.name)
               cmd_defaults = defaults[self.topic.name][self.name]
@@ -111,6 +114,7 @@ module Clitopic
           end
 
           if cmd_defaults.nil?
+            puts "no defaults"
             return
           end
 

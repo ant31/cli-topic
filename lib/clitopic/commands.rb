@@ -79,7 +79,11 @@ module Clitopic
         @current_options, @current_args = cmd.parse(arguments.dup)
       rescue OptionParser::ParseError => e
         $stderr.puts Clitopic::Helpers.format_with_bang(e.message)
-        run("help", [cmd.fullname])
+        cmd.options = {}
+        cmd.arguments = {}
+        @current_options = nil
+        @current_arguments = nil
+        run(cmd.fullname, ["--help"])
       end
 
       def run(cmd, arguments=[])
@@ -95,7 +99,6 @@ module Clitopic
         end
         prepare_run(@current_cmd, arguments)
         if @current_cmd.options[:load_defaults] == true || Clitopic.load_defaults?
-          puts 'load'
           @current_cmd.load_defaults
         end
         @current_cmd.call

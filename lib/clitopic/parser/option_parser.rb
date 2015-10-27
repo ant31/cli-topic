@@ -56,11 +56,11 @@ module Clitopic
 
       def parse(args)
         @invalid_options ||= []
-        parser.order!(args)
+        parser.parse!(args)
         @arguments = args
         Clitopic::Commands.validate_arguments!(@invalid_options)
         return @options, @arguments
-        rescue OptionParser::InvalidOption => ex
+      rescue OptionParser::InvalidOption => ex
         @invalid_options << ex.args.first
         retry
       end

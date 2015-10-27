@@ -30,7 +30,7 @@ module Clitopic
 
       option :merge, "--[no-]merge", "Merge options with current file", default: true
       option :force, "-f", "--force", "Overwrite file", default: false
-      option :hidden, "--with-hidden", "include hidden cmds/topics", default: false
+
 
       class << self
         def cmd_opts(cmd, opts)
