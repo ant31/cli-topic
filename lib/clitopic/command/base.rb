@@ -1,3 +1,4 @@
+require 'yaml'
 require 'clitopic/utils'
 require 'clitopic/parsers'
 require 'clitopic/topic'
