@@ -52,16 +52,17 @@ module Clitopic
           Clitopic::Commands.global_commands.each do |c, cmd|
             cmd_opts(cmd, opts["commands"])
           end
+          opts['topics'] = {}
           Clitopic::Topics.topics.each do |topic_name, topic|
             if (!topic.hidden || options[:hidden])
-              opts[topic_name] = {}
-              opts[topic_name]["topic_options"] = {} if topic.topic_options.size > 0
+              opts['topics'][topic_name] = {}
+              opts['topics'][topic_name]["topic_options"] = {} if topic.topic_options.size > 0
               topic.topic_options.each do |opt|
-                opts[topic_name]["topic_options"][opt[:name].to_s] = opt[:default]
+                opts['topics'][topic_name]["topic_options"][opt[:name].to_s] = opt[:default]
               end
               if topic.commands.size > 0
                 topic.commands.each do |c, cmd|
-                  cmd_opts(cmd, opts[topic_name])
+                  cmd_opts(cmd, opts['topics'][topic_name])
                 end
               end
             end

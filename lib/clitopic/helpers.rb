@@ -413,8 +413,8 @@ module Clitopic
     def format_error(error, message='Clitopic client internal error.')
       formatted_error = []
       formatted_error << " !    #{message}"
-      formatted_error << ' !    Search for help at: https://help.clitopic.com"'
-      formatted_error << ' !    Or report a bug at: https://github.com/ant31/clitopic/issues/new'
+      formatted_error << ' !    Search for help at: https://github.com/ant31/cli-topic/wiki'
+      formatted_error << ' !    Or report a bug at: https://github.com/ant31/cli-topic/issues/new'
       formatted_error << ''
 
       command = ARGV.map do |arg|

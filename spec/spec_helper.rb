@@ -19,7 +19,10 @@ require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 SimpleCov.start do
   add_filter 'spec/'
+  add_filter 'lib/clitopic/helpers.rb'
   add_group 'lib', 'lib'
+  add_group 'commands', 'lib/clitopic/command'
+
 end
 
 require 'clitopic'

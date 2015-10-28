@@ -106,9 +106,9 @@ module Clitopic
               cmd_defaults = defaults["commands"][self.name]
             end
           else
-            if defaults.has_key?(self.topic.name)
-              cmd_defaults = defaults[self.topic.name][self.name]
-              topic_opts = defaults[self.topic.name]['topic_options']
+            if defaults.has_key?("topics") && defaults["topics"].has_key?(self.topic.name)
+              cmd_defaults = defaults['topics'][self.topic.name][self.name]
+              topic_opts = defaults['topics'][self.topic.name]['topic_options']
             end
           end
 
