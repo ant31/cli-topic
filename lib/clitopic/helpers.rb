@@ -109,28 +109,6 @@ module Clitopic
       Clitopic::Command.run(command, args)
     end
 
-    def retry_on_exception(*exceptions)
-      retry_count = 0
-      begin
-        yield
-      rescue *exceptions => ex
-        raise ex if retry_count >= 3
-        sleep 3
-        retry_count += 1
-        retry
-      end
-    end
-
-    def has_git?
-      %x{ git --version }
-      $?.success?
-    end
-
-    def git(args)
-      return "" unless has_git?
-      flattened_args = [args].flatten.compact.join(" ")
-      %x{ git #{flattened_args} 2>&1 }.strip
-    end
 
     def time_ago(since)
       if since.is_a?(String)

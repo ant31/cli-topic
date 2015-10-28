@@ -111,26 +111,6 @@ module Clitopic
           end
         end
 
-        def display_topic(topic_name, with_commands=false, with_header=false)
-          if with_commands
-            longest = longest_cmd
-          else
-            longest = longest_topic
-          end
-          topic = Topics[topic_name]
-          header(topic) if with_header
-
-          if topic.hidden == false || options[:with_hidden] == true
-            puts ("%-#{longest + 3}s  # %s" % [ "#{topic_name}", "#{topic.short_description}" ]).indent(2)
-            if with_commands
-              topic.commands.each do |cmd_name, cmd|
-                puts ("   %-#{longest}s  # %s" % [ "#{cmd.fullname}", "#{cmd.short_description}"]).indent(2)
-              end
-              puts ""
-            end
-          end
-        end
-
         def display_topics(with_commands=false)
           puts "Additional topics:\n\n"
           Clitopic::Topics.topics.each do |topic_name, topic|
