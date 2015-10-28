@@ -3,26 +3,15 @@ require 'clitopic/parsers'
 
 module Clitopic
   class << self
-    attr_accessor :debug, :commands_dir, :parser, :default_parser, :version, :default_files, :load_defaults, :name
+    attr_accessor :debug, :commands_dir, :version, :default_files, :load_defaults, :name
     def name
       @name ||= 'clito'
     end
-    def parser
-      @parser ||= default_parser
-    end
 
     def load_defaults?
-      @load_defaults ||= true
+      @load_defaults
     end
 
-    def parser=(name)
-      Clitopic::Command::Base.extend name
-      @parser = name
-    end
-
-    def default_parser
-      @default_parsre ||= Clitopic::Parser::OptParser
-    end
   end
 end
 
@@ -30,8 +19,8 @@ end
 # Defaults
 Clitopic.name = "clitopic"
 Clitopic.debug = false
-Clitopic.version = Clitopic::VERSION
 Clitopic.load_defaults = true
+Clitopic.version = Clitopic::VERSION
 Clitopic.default_files = [File.join(Dir.getwd, ".clitopic.yml"), File.join(Dir.home, ".clitopic.yml")]
 
 

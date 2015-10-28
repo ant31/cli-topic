@@ -22,7 +22,7 @@ module Clitopic
 
     end
 
-    class DefaultFile < Clitopic::Command::Base
+    class DefaultsFile < Clitopic::Command::Base
       register name: 'defaults_file',
       description: "create default file",
       hidden: true,
@@ -72,7 +72,6 @@ module Clitopic
               raise ArgumentError.new("File #{file} exists, use --merge or --force")
             end
             if merge && !force
-              return if not Clitopic::Helpers.confirm("Overwrite #{file} ? (y/N)")
               opts = opts.merge(YAML.load_file(file))
             end
           end
@@ -80,7 +79,7 @@ module Clitopic
           File.open(file, 'wb') do  |file|
             file.write(opts.to_yaml)
           end
-          puts opts.to_yaml
+          return opts
         end
 
         def call
@@ -89,7 +88,9 @@ module Clitopic
             raise ArgumentError.new("Missing file")
           end
           file = @arguments[0]
-          dump_options(file, @options[:merge], @options[:force])
+          opts = dump_options(file, @options[:merge], @options[:force])
+          puts opts
+          return opts
         end
       end
 

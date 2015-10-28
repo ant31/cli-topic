@@ -33,6 +33,8 @@ end
 class TopicB < Clitopic::Topic::Base
   register name: "b",
   description: "describe b"
+
+  option :merge, "--[no-]merge", "Merge options with current file", default: true
 end
 
 class Topic < Clitopic::Topic::Base

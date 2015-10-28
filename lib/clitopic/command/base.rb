@@ -7,8 +7,7 @@ module Clitopic
   module Command
     class Base
       class << self
-        include Clitopic.parser
-
+        include Clitopic::Parser::OptParser
         attr_accessor :name, :banner, :description, :hidden, :short_description
         attr_accessor :arguments, :options
 
