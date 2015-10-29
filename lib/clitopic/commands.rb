@@ -97,10 +97,10 @@ module Clitopic
                                     "See `help` for a list of available commands."
                                   ].compact.join("\n\n"))
         end
-        prepare_run(@current_cmd, arguments)
         if @current_cmd.options[:load_defaults] == true || Clitopic.load_defaults?
           @current_cmd.load_defaults
         end
+        prepare_run(@current_cmd, arguments)
         @current_cmd.call
       end
 

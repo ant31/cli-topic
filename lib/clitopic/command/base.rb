@@ -71,10 +71,10 @@ module Clitopic
           opts.each do |name, value|
             name = name.to_s.to_sym
             if !value.nil?
-              if options[name].nil?
-                options[name] = value
-              elsif options[name].is_a?(Array)
+              if options[name].is_a?(Array)
                 options[name] += value
+              else
+                options[name] = value
               end
             end
           end
@@ -112,14 +112,14 @@ module Clitopic
             end
           end
 
+          load_options(topic_opts)
+
           if cmd_defaults.nil?
             puts "no defaults"
             return
           end
 
-          load_options(topic_opts)
           load_options(cmd_defaults["options"])
-
           if cmd_defaults["args"] && !arguments
             @arguments += Array(cmd_defaults["args"])
           end
