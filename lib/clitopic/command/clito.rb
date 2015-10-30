@@ -42,6 +42,11 @@ module Clitopic
           end
         end
 
+        def deep_merge(h1, h2)
+          merger = proc { |key, v1, v2| Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
+          h1.merge(h2, &merger)
+        end
+
         def dump_options(file, merge=true, force=false)
           opts = {"common_options" => {}}
           opts["common_options"] = {} if Clitopic::Commands.global_options.size > 0
@@ -73,7 +78,7 @@ module Clitopic
               raise ArgumentError.new("File #{file} exists, use --merge or --force")
             end
             if merge && !force
-              opts = opts.merge(YAML.load_file(file))
+              opts = deep_merge(opts, YAML.load_file(file))
             end
           end
           puts "write: #{file}"
