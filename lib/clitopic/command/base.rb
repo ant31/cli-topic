@@ -115,7 +115,6 @@ module Clitopic
           load_options(topic_opts)
 
           if cmd_defaults.nil?
-            puts "no defaults"
             return
           end
 

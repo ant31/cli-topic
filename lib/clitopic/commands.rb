@@ -60,6 +60,7 @@ module Clitopic
         end
       end
 
+
       def all_commands
         cmds = []
         Topics.topics.each do |k,topic|
@@ -77,6 +78,7 @@ module Clitopic
 
       def prepare_run(cmd, arguments)
         @current_options, @current_args = cmd.parse(arguments.dup)
+        return @current_options, @current_args
       rescue OptionParser::ParseError => e
         $stderr.puts Clitopic::Helpers.format_with_bang(e.message)
         cmd.options = {}

@@ -54,17 +54,35 @@ module Clitopic
         parser.to_s
       end
 
+      def check_required (opts)
+        opts.each do |opt|
+          if opt[:required] == true
+            if options[opt[:name]].nil?
+              message = "Missing required option: #{opt[:args][0]}"
+              $stderr.puts(Clitopic::Helpers.format_with_bang(message) + "\n\n")
+              Clitopic::Commands.run(self.fullname, ["--help"])
+            end
+          end
+        end
+      end
+
+      def check_all_required
+        check_required(self.cmd_options)
+        check_required(self.topic.topic_options)
+        check_required(Clitopic::Commands.global_options)
+      end
+
       def parse(args)
         @invalid_options ||= []
         parser.parse!(args)
+        check_all_required
         @arguments = args
         Clitopic::Commands.validate_arguments!(@invalid_options)
         return @options, @arguments
-      rescue OptionParser::InvalidOption => ex
+      rescue OptionParser::InvalidOption  => ex
         @invalid_options << ex.args.first
         retry
       end
-
     end
   end
 end
