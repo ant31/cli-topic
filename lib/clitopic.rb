@@ -3,7 +3,7 @@ require 'clitopic/parsers'
 
 module Clitopic
   class << self
-    attr_accessor :debug, :commands_dir, :version, :default_files, :load_defaults, :name
+    attr_accessor :debug, :commands_dir, :version, :default_files, :load_defaults, :name, :help_page, :issue_report
     def name
       @name ||= 'clito'
     end

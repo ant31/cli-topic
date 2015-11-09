@@ -22,7 +22,6 @@ SimpleCov.start do
   add_filter 'lib/clitopic/helpers.rb'
   add_group 'lib', 'lib'
   add_group 'commands', 'lib/clitopic/command'
-
 end
 
 require 'clitopic'

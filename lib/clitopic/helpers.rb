@@ -74,12 +74,12 @@ module Clitopic
     def confirm_command(app_to_confirm = app, message=nil)
       if confirmed_app = Clitopic::Commands.current_options[:confirm]
         unless confirmed_app == app_to_confirm
-          raise(Clitopic::Command::CommandFailed, "Confirmed app #{confirmed_app} did not match the selected app #{app_to_confirm}.")
+          raise(Clitopic::Commands::CommandFailed, "Confirmed app #{confirmed_app} did not match the selected app #{app_to_confirm}.")
         end
         return true
       else
         display
-        message ||= "WARNING: Destructive Action\nThis command will affect the app: #{app_to_confirm}"
+        message ||= "WARNING: Destructive Action\n"
         message << "\nTo proceed, type \"#{app_to_confirm}\" or re-run this command with --confirm #{app_to_confirm}"
         output_with_bang(message)
         display
@@ -236,7 +236,7 @@ module Clitopic
     end
 
     def fail(message)
-      raise Clitopic::Command::CommandFailed, message
+      raise Clitopic::Commands::CommandFailed, message
     end
 
     ## DISPLAY HELPERS
@@ -391,8 +391,8 @@ module Clitopic
     def format_error(error, message='Clitopic client internal error.')
       formatted_error = []
       formatted_error << " !    #{message}"
-      formatted_error << ' !    Search for help at: https://github.com/ant31/cli-topic/wiki'
-      formatted_error << ' !    Or report a bug at: https://github.com/ant31/cli-topic/issues/new'
+      formatted_error << " !    Search for help at: #{Clitopic.help_page || "https://github.com/ant31/cli-topic/wiki"}"
+      formatted_error << " !    Or report a bug at: #{Clitopic.issue_report || "https://github.com/ant31/cli-topic/issues/new"} "
       formatted_error << ''
 
       command = ARGV.map do |arg|
