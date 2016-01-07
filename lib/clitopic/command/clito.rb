@@ -5,16 +5,16 @@ require 'clitopic/helpers'
 module Clitopic
   module Command
     class ClitoTopic < Clitopic::Topic::Base
-      register name: 'clito',
+      register name: 'clitopic',
         description: 'clitopic commands',
-        hidden: true
+        hidden: false
     end
 
     class Suggestions < Clitopic::Command::Base
       register name: 'suggestions',
       description: 'suggests available commands base on incomplete input',
       hidden: true,
-      topic: 'clito'
+      topic: 'clitopic'
 
       def self.call
         puts Clitopic::Helpers.suggestion(@arguments[0], Clitopic::Commands.all_commands)
@@ -26,7 +26,7 @@ module Clitopic
       register name: 'defaults_file',
       description: "create default file",
       hidden: true,
-      topic: 'clito'
+      topic: 'clitopic'
 
       option :merge, "--[no-]merge", "Merge options with current file", default: true
       option :force, "-f", "--force", "Overwrite file", default: false
@@ -91,9 +91,13 @@ module Clitopic
         def call
           puts @options
           if @arguments.size == 0
-            raise ArgumentError.new("Missing file")
+            file = Clitopic::Helpers.find_default_file
+            if file.nil?
+              raise ArgumentError.new("Missing file")
+            end
+          else
+            file = @arguments[0]
           end
-          file = @arguments[0]
           opts = dump_options(file, @options[:merge], @options[:force])
           puts opts
           return opts
@@ -106,7 +110,7 @@ module Clitopic
       register name: 'version',
       description: "Display clitopic version",
       hidden: true,
-      topic: 'clito'
+      topic: 'clitopic'
 
       class  << self
         def call

@@ -437,6 +437,16 @@ module Clitopic
       end
     end
 
+    def find_default_file
+      Clitopic.default_files.each do |f|
+        if File.exist?(f)
+          file = f
+          break
+        end
+      end
+      return file
+    end
+
     def error_log_path
       File.join(home_directory, '.clitopic', 'error.log')
     end

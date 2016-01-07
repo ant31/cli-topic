@@ -81,15 +81,7 @@ module Clitopic
         end
 
         def load_defaults(file=nil)
-          if file.nil?
-            Clitopic.default_files.each do |f|
-              if File.exist?(f)
-                file = f
-                break
-              end
-            end
-          end
-
+          file ||= Clitopic::Helpers.find_default_file
           if file.nil?
             return
           end
