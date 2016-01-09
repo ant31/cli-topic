@@ -30,14 +30,23 @@ module Clitopic
           parser.base.long.delete('version')
           process_options(parser, self.cmd_options)
 
-          if !self.topic.nil? && self.topic.topic_options.size > 0
-            parser.separator ""
-            parser.separator "Topic options:"
-            process_options(parser, self.topic.topic_options)
+          if !self.topic.nil?
+            self.inherited_options.each do |cmd|
+              cmd = self.topic.commands[cmd.to_s]
+              parser.separator ""
+              parser.separator "'#{cmd.fullname}' inherited options"
+              process_options(parser, cmd.cmd_options)
+            end
+
+            if self.topic.topic_options.size > 0
+              parser.separator ""
+              parser.separator "Topic options"
+              process_options(parser, self.topic.topic_options)
+            end
           end
 
           parser.separator ""
-          parser.separator "Common options:"
+          parser.separator "Common options"
           process_options(parser, Clitopic::Commands.global_options)
 
           # No argument, shows at tail.  This will print an options summary.
@@ -68,7 +77,7 @@ module Clitopic
 
       def check_all_required
         check_required(self.cmd_options)
-        check_required(self.topic.topic_options)
+        check_required(self.topic.topic_options) if !self.topic.nil?
         check_required(Clitopic::Commands.global_options)
       end
 

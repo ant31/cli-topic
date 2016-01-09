@@ -23,21 +23,25 @@ module Clitopic
     end
 
     class DefaultsFile < Clitopic::Command::Base
-      register name: 'defaults_file',
+      register name: 'create-defaults',
       description: "create default file",
-      hidden: true,
+      hidden: false,
       topic: 'clitopic'
 
       option :merge, "--[no-]merge", "Merge options with current file", default: true
       option :force, "-f", "--force", "Overwrite file", default: false
-
+      option :topics, "-t", "--topics TOPICS", Array,  "create file for TOPICS list only"
 
       class << self
         def cmd_opts(cmd, opts)
           if cmd.cmd_options.size > 0 && (!cmd.hidden || options[:hidden])
+            cmd_comment = "#{cmd.name}$comment"
+            opts[cmd_comment] = {}
+            opts = opts[cmd_comment]
             opts[cmd.name] = {"options" => {}, "args" =>  []}
             cmd.cmd_options.each do |opt|
-              opts[cmd.name]["options"][opt[:name].to_s] = opt[:default]
+              opts[cmd.name]["options"]["#{opt[:name].to_s}$comment"] = {}
+              opts[cmd.name]["options"]["#{opt[:name].to_s}$comment"][opt[:name].to_s] = opt[:default]
             end
           end
         end
@@ -59,15 +63,21 @@ module Clitopic
           end
           opts['topics'] = {}
           Clitopic::Topics.topics.each do |topic_name, topic|
+            if @options[:topics] && !@options[:topics].index(topic_name.to_s)
+              next
+            end
+
             if (!topic.hidden || options[:hidden])
-              opts['topics'][topic_name] = {}
-              opts['topics'][topic_name]["topic_options"] = {} if topic.topic_options.size > 0
+              topic_comment = "#{topic_name}$comment"
+              opts['topics'][topic_comment] = {}
+              opts['topics'][topic_comment][topic_name] = {}
+              opts['topics'][topic_comment][topic_name]["topic_options$comment"] = {"topic_options" => {}} if topic.topic_options.size > 0
               topic.topic_options.each do |opt|
-                opts['topics'][topic_name]["topic_options"][opt[:name].to_s] = opt[:default]
+                opts['topics'][topic_comment][topic_name]["topic_options$comment"]["topic_options"][opt[:name].to_s] = opt[:default]
               end
               if topic.commands.size > 0
                 topic.commands.each do |c, cmd|
-                  cmd_opts(cmd, opts['topics'][topic_name])
+                  cmd_opts(cmd, opts['topics'][topic_comment][topic_name])
                 end
               end
             end
@@ -82,16 +92,45 @@ module Clitopic
             end
           end
           puts "write: #{file}"
+          yaml = opts.to_yaml
+          yaml = yaml.gsub("topic_options$comment:", "  # common-topic options")
+          Clitopic::Topics.topics.each do |topic_name, topic|
+            yaml = yaml.gsub(/(\s+)#{topic_name}\$comment:/, '\1' + topic_comment(topic))
+            if topic.commands.size > 0
+              topic.commands.each do |c, cmd|
+                yaml = yaml.gsub(/(\s+)#{c}\$comment:/, '\1' + cmd_comment(cmd))
+                yaml = opt_comment(cmd, yaml)
+              end
+            end
+          end
           File.open(file, 'wb') do  |file|
-            file.write(opts.to_yaml)
+            file.write(yaml)
           end
           return opts
         end
 
+        def topic_comment(topic)
+          "\n    # Topic: #{topic.name}\n" +
+          "    # #{topic.description.gsub("\n", "\n    # ")}"
+        end
+
+        def cmd_comment(cmd)
+          "\n        # #{cmd.fullname}\n" +
+          "        # #{cmd.short_description}"
+        end
+
+        def opt_comment(cmd, yaml)
+          if cmd.cmd_options.size > 0 && (!cmd.hidden || options[:hidden])
+            cmd.cmd_options.each do |opt|
+              yaml = yaml.gsub(/(\s+)#{opt[:name].to_s}\$comment:/, '\1' +  "# #{opt[:args].last}")
+            end
+          end
+          return yaml
+        end
+
         def call
-          puts @options
           if @arguments.size == 0
-            file = Clitopic::Helpers.find_default_file
+            file = Clitopic::Helpers.find_default_file || Clitopic.default_files.first
             if file.nil?
               raise ArgumentError.new("Missing file")
             end

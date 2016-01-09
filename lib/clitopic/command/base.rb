@@ -9,7 +9,7 @@ module Clitopic
       class << self
         include Clitopic::Parser::OptParser
         attr_accessor :name, :banner, :description, :hidden, :short_description
-        attr_accessor :arguments, :options
+        attr_accessor :arguments, :options, :inherited_options
 
         def cmd_options
           @cmd_options ||= []
@@ -17,6 +17,10 @@ module Clitopic
 
         def banner
           @banner ||= "Usage: #{Clitopic.name} #{self.fullname} [options]"
+        end
+
+        def inherited_options(*cmds)
+          @inherited_options ||= cmds
         end
 
         def short_description
@@ -98,21 +102,24 @@ module Clitopic
               cmd_defaults = defaults["commands"][self.name]
             end
           else
+
             if defaults.has_key?("topics") && defaults["topics"].has_key?(self.topic.name)
               cmd_defaults = defaults['topics'][self.topic.name][self.name]
               topic_opts = defaults['topics'][self.topic.name]['topic_options']
+              load_options(topic_opts)
+              if !cmd_defaults.nil?
+                load_options(cmd_defaults["options"])
+                if cmd_defaults["args"] && !arguments
+                  @arguments += Array(cmd_defaults["args"])
+                end
+              end
+              self.inherited_options.each do |cmd|
+                if defaults["topics"].has_key?(self.topic.name)
+                  cmd_opts = defaults['topics'][self.topic.name][cmd.to_s]
+                  load_options(cmd_opts["options"]) if !cmd_opts.nil?
+                end
+              end
             end
-          end
-
-          load_options(topic_opts)
-
-          if cmd_defaults.nil?
-            return
-          end
-
-          load_options(cmd_defaults["options"])
-          if cmd_defaults["args"] && !arguments
-            @arguments += Array(cmd_defaults["args"])
           end
         end
 

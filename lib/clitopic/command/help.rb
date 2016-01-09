@@ -8,18 +8,6 @@ module Clitopic
   end
 
   module Command
-    class Help2 < Clitopic::Command::Base
-      register name: 'help2',
-      description: "Display helps",
-      banner: "Display helps",
-      topic: "help"
-
-      option :all, "--all", "Display all topics with all commands"
-      option :topics, "--topics", "Display all availables topics"
-      option :topic, "--topic=TOPIC", "Display availables commands for the TOPIC"
-      option :with_hidden, "--with-hidden", "Include hidden commands/topics"
-    end
-
     class Help < Clitopic::Command::Base
       register name: 'index',
       banner: "Usage: #{Clitopic.name} help [COMMAND]",

@@ -438,6 +438,7 @@ module Clitopic
     end
 
     def find_default_file
+      file = nil
       Clitopic.default_files.each do |f|
         if File.exist?(f)
           file = f
